@@ -1,40 +1,1069 @@
-Threads Viral Generator
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Threads Viral Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
 
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --border: #2a2a3a;
+    --accent: #ff4d6d;
+    --accent2: #7c3aed;
+    --accent3: #06d6a0;
+    --text: #f0f0f8;
+    --muted: #6b6b8a;
+    --pill: #1e1e2e;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-⚡ THREADS ENGINE
-Viral Post Generator
-4 blueprints. Zero guesswork. Maximum reach.
-✦
-Original Post
-⚡
-Short Post
-↩
-Reply
-⛓
-Thread
-TOPIC / NICHE
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-CORE MESSAGE / ANGLE
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-TONE
-🔥 Bold
-💬 Vulnerable
-📊 Analytical
-😂 Funny
-✨ Inspirational
-VIRAL BLUEPRINTS
-0 selected
-🔥
-Hot Take / Contrarian
-Flip the consensus. Make people react.
-📖
-Story + Lesson
-Personal narrative → universal insight.
-📋
-List / Tips Format
-Scannable value. High save & share rate.
-💬
-Reply Bait / Hook
-Engineered for comments & debate.
-⚡ Generate Viral Posts
+  .glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.25;
+  }
+  .orb1 { width: 500px; height: 500px; background: var(--accent2); top: -150px; left: -100px; }
+  .orb2 { width: 400px; height: 400px; background: var(--accent); bottom: -100px; right: -100px; }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--pill);
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(38px, 6vw, 64px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle { color: var(--muted); font-size: 16px; margin-top: 12px; font-weight: 300; }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 6px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .tab.active {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+
+  .tab:hover:not(.active) { color: var(--text); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+
+  input, textarea, select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--accent2);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+  }
+
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+  select option { background: #1a1a24; }
+
+  .blueprint-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  @media (max-width: 600px) { .blueprint-grid { grid-template-columns: 1fr; } }
+
+  .blueprint-pill {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .blueprint-pill:hover { border-color: var(--accent2); }
+
+  .blueprint-pill.selected {
+    border-color: var(--accent);
+    background: rgba(255, 77, 109, 0.07);
+    box-shadow: 0 0 20px rgba(255,77,109,0.1);
+  }
+
+  .bp-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+  .bp-info { flex: 1; }
+  .bp-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .bp-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  .bp-check {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 3px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+
+  .blueprint-pill.selected .bp-check {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .gen-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gen-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .gen-btn:hover::after { opacity: 1; }
+  .gen-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(255,77,109,0.35); }
+  .gen-btn:active { transform: translateY(0); }
+  .gen-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  .output-section {
+    margin-top: 30px;
+    display: none;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .output-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .output-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
+
+  .output-meta {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--pill);
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+  }
+
+  .posts-grid { display: flex; flex-direction: column; gap: 14px; }
+
+  .post-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .post-card:hover { border-color: rgba(124,58,237,0.4); transform: translateY(-1px); }
+
+  .post-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .post-card.hot-take::before { background: linear-gradient(90deg, var(--accent), transparent); }
+  .post-card.story::before { background: linear-gradient(90deg, #f59e0b, transparent); }
+  .post-card.list::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+  .post-card.reply-bait::before { background: linear-gradient(90deg, #60a5fa, transparent); }
+  .post-card.reply-post::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+
+  .post-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 12px;
+  }
+
+  .hot-take .post-badge { background: rgba(255,77,109,0.15); color: var(--accent); }
+  .story .post-badge { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .list .post-badge { background: rgba(6,214,160,0.15); color: var(--accent3); }
+  .reply-bait .post-badge { background: rgba(96,165,250,0.15); color: #60a5fa; }
+  .reply-post .post-badge { background: rgba(124,58,237,0.15); color: #a78bfa; }
+
+  .post-text { font-size: 15px; line-height: 1.7; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+
+  .post-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .act-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .act-btn:hover { border-color: var(--accent2); color: var(--text); }
+  .act-btn.copy-done { border-color: var(--accent3); color: var(--accent3); }
+
+  .char-count { margin-left: auto; font-size: 11px; color: var(--muted); display: flex; align-items: center; }
+
+  .history-section { margin-top: 40px; display: none; animation: fadeUp 0.4s ease both; }
+
+  .history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+
+  .history-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .clear-btn { font-size: 12px; color: var(--accent); background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; opacity: 0.7; transition: opacity 0.2s; }
+  .clear-btn:hover { opacity: 1; }
+
+  .history-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; }
+  .history-scroll::-webkit-scrollbar { height: 4px; }
+  .history-scroll::-webkit-scrollbar-track { background: transparent; }
+  .history-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .hist-chip {
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hist-chip:hover { border-color: var(--accent2); color: var(--text); }
+
+  .section-label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+
+  .selected-count {
+    font-size: 11px;
+    background: rgba(255,77,109,0.1);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-weight: 600;
+  }
+
+  .thread-connector { display: flex; align-items: center; gap: 10px; padding: 4px 20px; color: var(--muted); font-size: 12px; }
+  .thread-line { width: 2px; height: 20px; background: var(--border); margin-left: 9px; }
+
+  .tone-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+
+  .tone-btn {
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tone-btn.active { border-color: var(--accent2); color: var(--text); background: rgba(124,58,237,0.12); }
+
+  .error-msg {
+    background: rgba(255,77,109,0.1);
+    border: 1px solid rgba(255,77,109,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: #ff8fa3;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="glow-orb orb1"></div>
+<div class="glow-orb orb2"></div>
+
+<div class="container">
+
+  <header>
+    <div class="logo-badge">⚡ Threads Engine</div>
+    <h1>Viral Post<br><span>Generator</span></h1>
+    <p class="subtitle">4 blueprints. Zero guesswork. Maximum reach.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('original')"><span>✦</span> Original Post</button>
+    <button class="tab" onclick="switchTab('short')"><span>⚡</span> Short Post</button>
+    <button class="tab" onclick="switchTab('reply')"><span>↩</span> Reply</button>
+    <button class="tab" onclick="switchTab('thread')"><span>⛓</span> Thread</button>
+  </div>
+
+  <!-- ORIGINAL TAB -->
+  <div id="tab-original" class="tab-content card">
+    <div class="form-row">
+      <div class="field">
+        <label>Topic / Niche</label>
+        <input type="text" id="orig-topic" placeholder="e.g. fitness, startups, AI, relationships…">
+      </div>
+      <div class="field">
+        <label>Core message / angle</label>
+        <input type="text" id="orig-message" placeholder="e.g. Most people waste mornings">
+      </div>
+    </div>
+
+    <div class="field full" style="margin-bottom:16px;">
+      <label>Tone</label>
+      <div class="tone-selector">
+        <button class="tone-btn active" data-tone="bold">🔥 Bold</button>
+        <button class="tone-btn" data-tone="vulnerable">💬 Vulnerable</button>
+        <button class="tone-btn" data-tone="analytical">📊 Analytical</button>
+        <button class="tone-btn" data-tone="funny">😂 Funny</button>
+        <button class="tone-btn" data-tone="inspirational">✨ Inspirational</button>
+      </div>
+    </div>
+
+    <div class="field full">
+      <div class="section-label">
+        <label>Viral Blueprints</label>
+        <span class="selected-count" id="bp-count">0 selected</span>
+      </div>
+      <div class="blueprint-grid">
+        <div class="blueprint-pill" data-bp="hot-take" onclick="toggleBp(this)">
+          <div class="bp-icon">🔥</div>
+          <div class="bp-info">
+            <div class="bp-name">Hot Take / Contrarian</div>
+            <div class="bp-desc">Flip the consensus. Make people react.</div>
+          </div>
+          <div class="bp-check"></div>
+        </div>
+        <div class="blueprint-pill" data-bp="story" onclick="toggleBp(this)">
+          <div class="bp-icon">📖</div>
+          <div class="bp-info">
+            <div class="bp-name">Story + Lesson</div>
+            <div class="bp-desc">Personal narrative → universal insight.</div>
+          </div>
+          <div class="bp-check"></div>
+        </div>
+        <div class="blueprint-pill" data-bp="list" onclick="toggleBp(this)">
+          <div class="bp-icon">📋</div>
+          <div class="bp-info">
+            <div class="bp-name">List / Tips Format</div>
+            <div class="bp-desc">Scannable value. High save & share rate.</div>
+          </div>
+          <div class="bp-check"></div>
+        </div>
+        <div class="blueprint-pill" data-bp="reply-bait" onclick="toggleBp(this)">
+          <div class="bp-icon">💬</div>
+          <div class="bp-info">
+            <div class="bp-name">Reply Bait / Hook</div>
+            <div class="bp-desc">Engineered for comments & debate.</div>
+          </div>
+          <div class="bp-check"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="gen-btn" id="orig-btn" onclick="generateOriginal()">
+      <div class="spinner" id="orig-spinner"></div>
+      <span id="orig-btn-text">⚡ Generate Viral Posts</span>
+    </button>
+    <div class="error-msg" id="orig-error"></div>
+  </div>
+
+  <!-- SHORT POST TAB -->
+  <div id="tab-short" class="tab-content card" style="display:none;">
+    <div class="form-row">
+      <div class="field">
+        <label>Topic / Niche</label>
+        <input type="text" id="short-topic" placeholder="e.g. productivity, money, mindset…">
+      </div>
+      <div class="field">
+        <label>Style</label>
+        <select id="short-style">
+          <option value="one-liner">🎯 One-liner (1 punchy sentence)</option>
+          <option value="two-liner">✌️ Two-liner (setup + punchline)</option>
+          <option value="micro-rant">🔥 Micro-rant (3 lines, bold opinion)</option>
+          <option value="quote-style">💬 Quote-style (shareable wisdom)</option>
+          <option value="observation">👁 Observation (notice something real)</option>
+          <option value="pattern-interrupt">⚡ Pattern interrupt (stop the scroll)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field full" style="margin-bottom:16px;">
+      <label>Tone</label>
+      <div class="tone-selector" id="short-tone-selector">
+        <button class="tone-btn short-tone active" data-tone="bold">🔥 Bold</button>
+        <button class="tone-btn short-tone" data-tone="funny">😂 Funny</button>
+        <button class="tone-btn short-tone" data-tone="real">💯 Raw & Real</button>
+        <button class="tone-btn short-tone" data-tone="inspirational">✨ Inspirational</button>
+        <button class="tone-btn short-tone" data-tone="sarcastic">😏 Sarcastic</button>
+      </div>
+    </div>
+
+    <div class="field full" style="margin-bottom:0;">
+      <label>Specific angle or idea (optional)</label>
+      <input type="text" id="short-angle" placeholder="e.g. hustle culture is overrated, sleep is underrated…">
+    </div>
+
+    <button class="gen-btn" id="short-btn" onclick="generateShort()">
+      <div class="spinner" id="short-spinner"></div>
+      <span id="short-btn-text">⚡ Generate Short Posts</span>
+    </button>
+    <div class="error-msg" id="short-error"></div>
+  </div>
+
+  <!-- REPLY TAB -->
+  <div id="tab-reply" class="tab-content card" style="display:none;">
+    <div class="field full" style="margin-bottom:16px;">
+      <label>Paste the original post you want to reply to</label>
+      <textarea id="reply-source" placeholder="Paste the Threads post here…" style="min-height:110px;"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label>Reply goal</label>
+        <select id="reply-goal">
+          <option value="add-value">Add value / insight</option>
+          <option value="agree-amplify">Agree & amplify</option>
+          <option value="respectful-disagree">Respectful pushback</option>
+          <option value="funny">Funny / witty</option>
+          <option value="question">Ask a thought-provoking question</option>
+          <option value="story">Share a related story</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Tone</label>
+        <select id="reply-tone">
+          <option value="bold">Bold & direct</option>
+          <option value="warm">Warm & relatable</option>
+          <option value="analytical">Analytical</option>
+          <option value="funny">Funny / playful</option>
+          <option value="curious">Curious</option>
+        </select>
+      </div>
+    </div>
+    <div class="field full" style="margin-bottom:0;">
+      <label>Your unique angle / personal context (optional)</label>
+      <input type="text" id="reply-context" placeholder="e.g. I've tried this for 2 years, or I work in finance…">
+    </div>
+    <button class="gen-btn" id="reply-btn" onclick="generateReply()">
+      <div class="spinner" id="reply-spinner"></div>
+      <span id="reply-btn-text">↩ Generate Replies</span>
+    </button>
+    <div class="error-msg" id="reply-error"></div>
+  </div>
+
+  <!-- THREAD TAB -->
+  <div id="tab-thread" class="tab-content card" style="display:none;">
+    <div class="form-row">
+      <div class="field">
+        <label>Thread topic</label>
+        <input type="text" id="thread-topic" placeholder="e.g. How I went from broke to 6 figures">
+      </div>
+      <div class="field">
+        <label>Number of posts</label>
+        <select id="thread-count">
+          <option value="3">3 posts</option>
+          <option value="5" selected>5 posts</option>
+          <option value="7">7 posts</option>
+        </select>
+      </div>
+    </div>
+    <div class="field full" style="margin-bottom:16px;">
+      <label>Thread style</label>
+      <select id="thread-style">
+        <option value="story-arc">Story arc (hook → climax → lesson)</option>
+        <option value="listicle">Expanded listicle (hook → tips → CTA)</option>
+        <option value="how-to">Step-by-step how-to</option>
+        <option value="hot-take-debate">Hot take + defending the argument</option>
+      </select>
+    </div>
+    <div class="field full" style="margin-bottom:0;">
+      <label>Key points to include (optional)</label>
+      <textarea id="thread-points" placeholder="Bullet-point the key ideas or moments you want covered…" style="min-height:80px;"></textarea>
+    </div>
+    <button class="gen-btn" id="thread-btn" onclick="generateThread()">
+      <div class="spinner" id="thread-spinner"></div>
+      <span id="thread-btn-text">⛓ Generate Thread</span>
+    </button>
+    <div class="error-msg" id="thread-error"></div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="output-section" id="output-section">
+    <div class="output-header">
+      <div class="output-title">Generated Posts</div>
+      <div class="output-meta" id="output-meta">—</div>
+    </div>
+    <div class="posts-grid" id="posts-grid"></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-section" id="history-section">
+    <div class="history-header">
+      <div class="history-title">Recent topics</div>
+      <button class="clear-btn" onclick="clearHistory()">Clear all</button>
+    </div>
+    <div class="history-scroll" id="history-scroll"></div>
+  </div>
+
+</div>
+
+<script>
+let currentTab = 'original';
+let selectedBps = new Set();
+let selectedTone = 'bold';
+let history = JSON.parse(localStorage.getItem('threads_history') || '[]');
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).style.display = 'block';
+  document.querySelectorAll('.tab')[['original','short','reply','thread'].indexOf(tab)].classList.add('active');
+  document.getElementById('output-section').style.display = 'none';
+}
+
+function toggleBp(el) {
+  const bp = el.dataset.bp;
+  if (selectedBps.has(bp)) { selectedBps.delete(bp); el.classList.remove('selected'); }
+  else { selectedBps.add(bp); el.classList.add('selected'); }
+  el.querySelector('.bp-check').textContent = selectedBps.has(bp) ? '✓' : '';
+  document.getElementById('bp-count').textContent = selectedBps.size + ' selected';
+}
+
+document.querySelectorAll('.tone-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.classList.contains('short-tone')) {
+      document.querySelectorAll('.short-tone').forEach(b => b.classList.remove('active'));
+    } else {
+      document.querySelectorAll('.tone-btn:not(.short-tone)').forEach(b => b.classList.remove('active'));
+    }
+    btn.classList.add('active');
+    if (!btn.classList.contains('short-tone')) selectedTone = btn.dataset.tone;
+  });
+});
+
+function setLoading(id, loading) {
+  const btn = document.getElementById(`${id}-btn`);
+  const spinner = document.getElementById(`${id}-spinner`);
+  const text = document.getElementById(`${id}-btn-text`);
+  btn.disabled = loading;
+  spinner.style.display = loading ? 'block' : 'none';
+  text.style.opacity = loading ? '0.5' : '1';
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(`${id}-error`);
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 6000);
+}
+
+function addToHistory(topic) {
+  if (!topic) return;
+  history = [topic, ...history.filter(h => h !== topic)].slice(0, 10);
+  localStorage.setItem('threads_history', JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory() {
+  const section = document.getElementById('history-section');
+  const scroll = document.getElementById('history-scroll');
+  if (history.length === 0) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  scroll.innerHTML = history.map(h => `<div class="hist-chip" onclick="fillTopic('${h.replace(/'/g,"\\'")}')">🕑 ${h}</div>`).join('');
+}
+
+function fillTopic(t) {
+  document.getElementById('orig-topic').value = t;
+  switchTab('original');
+}
+
+function clearHistory() {
+  history = [];
+  localStorage.removeItem('threads_history');
+  renderHistory();
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function countChars(text) { return text.replace(/\n/g,'').length; }
+
+function renderPosts(posts, metaLabel) {
+  const section = document.getElementById('output-section');
+  const grid = document.getElementById('posts-grid');
+  document.getElementById('output-meta').textContent = metaLabel;
+  grid.innerHTML = '';
+
+  posts.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = `post-card ${p.type || 'original'}`;
+    const chars = countChars(p.text);
+    card.innerHTML = `
+      <div class="post-badge">${p.icon || '✦'} ${p.label || 'POST'}</div>
+      <div class="post-text">${escHtml(p.text)}</div>
+      <div class="post-actions">
+        <button class="act-btn" onclick="copyPost(this, ${i})">📋 Copy</button>
+        <span class="char-count">${chars} chars</span>
+      </div>
+    `;
+    grid.appendChild(card);
+    if (p.connector) {
+      const conn = document.createElement('div');
+      conn.innerHTML = `<div class="thread-connector"><div class="thread-line"></div><span>↓ continues</span></div>`;
+      grid.appendChild(conn);
+    }
+  });
+
+  section.style.display = 'block';
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  window._lastPosts = posts;
+}
+
+function copyPost(btn, idx) {
+  const posts = window._lastPosts || [];
+  if (!posts[idx]) return;
+  navigator.clipboard.writeText(posts[idx].text).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copy-done');
+    setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('copy-done'); }, 2000);
+  });
+}
+
+// ── SERVER CALL (no API key exposed) ──
+async function callServer(system, user) {
+  const res = await fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ system, user })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Server error ' + res.status);
+  }
+  const data = await res.json();
+  return data.text;
+}
+
+async function generateShort() {
+  const topic = document.getElementById('short-topic').value.trim();
+  const style = document.getElementById('short-style').value;
+  const angle = document.getElementById('short-angle').value.trim();
+  const toneBtn = document.querySelector('.short-tone.active');
+  const tone = toneBtn ? toneBtn.dataset.tone : 'bold';
+
+  if (!topic) { showError('short', 'Please enter a topic or niche.'); return; }
+
+  setLoading('short', true);
+  addToHistory(topic);
+
+  const styleGuide = {
+    'one-liner':        'ONE-LINER: Exactly 1 sentence. Maximum impact. Must hit hard or be surprising. Under 100 characters.',
+    'two-liner':        'TWO-LINER: Line 1 = setup or bold claim. Line 2 = subverts, deepens, or lands the punchline. Under 150 chars total.',
+    'micro-rant':       'MICRO-RANT: 3 short lines. Line 1 = the hot take. Line 2 = the reason. Line 3 = the punchline or call to action. Under 200 chars total.',
+    'quote-style':      'QUOTE-STYLE: Write it like a quotable, shareable piece of wisdom. No attribution needed. Timeless, universally relatable. Under 150 chars.',
+    'observation':      'OBSERVATION: Notice something real and specific that everyone experiences but nobody says out loud. Relatable and a little uncomfortable. Under 180 chars.',
+    'pattern-interrupt':'PATTERN INTERRUPT: Start with something unexpected, weird, or counterintuitive that stops the scroll cold. Then deliver the insight. Under 200 chars.'
+  };
+
+  const styleLabelMap = {
+    'one-liner':'One-Liner', 'two-liner':'Two-Liner', 'micro-rant':'Micro-Rant',
+    'quote-style':'Quote Style', 'observation':'Observation', 'pattern-interrupt':'Pattern Interrupt'
+  };
+
+  const system = `You are an elite short-form content writer for Threads (Meta). You specialise in short, punchy posts that stop the scroll instantly. No hashtags. No fluff. Every word earns its place. Return valid JSON only — no markdown backticks, no preamble.`;
+
+  const user = `Generate 5 short Threads posts about: "${topic}".
+${angle ? `Specific angle: "${angle}"` : ''}
+Tone: ${tone}
+Style: ${styleGuide[style]}
+
+Return a JSON array of 5 objects:
+[{"text": "<the post, following the style guide exactly>"}]
+
+Make each one feel different — vary the structure, hook, and angle. Return ONLY the JSON array.`;
+
+  try {
+    const raw = await callServer(system, user);
+    const clean = raw.replace(/```json|```/g, '').trim();
+    let parsed = JSON.parse(clean);
+    if (!Array.isArray(parsed)) parsed = [parsed];
+
+    const icons = ['⚡','🎯','🔥','💬','✦'];
+    const posts = parsed.map((p, i) => ({
+      type: 'list',
+      icon: icons[i] || '⚡',
+      label: `${styleLabelMap[style]} #${i+1}`,
+      text: p.text || ''
+    }));
+
+    renderPosts(posts, `5 short posts · ${topic}`);
+  } catch(e) {
+    showError('short', 'Generation failed: ' + e.message);
+  }
+
+  setLoading('short', false);
+}
+
+async function generateOriginal() {
+  const topic = document.getElementById('orig-topic').value.trim();
+  const message = document.getElementById('orig-message').value.trim();
+  if (!topic) { showError('orig', 'Please enter a topic or niche.'); return; }
+  if (selectedBps.size === 0) { showError('orig', 'Select at least one blueprint.'); return; }
+
+  setLoading('orig', true);
+  addToHistory(topic);
+
+  const bpList = [...selectedBps];
+  const blueprintInstructions = {
+    'hot-take': `HOT TAKE / CONTRARIAN: Start with a bold, unpopular opinion. Use "Unpopular opinion:" or similar hook. Be specific and polarising. End with a provocative question or statement.`,
+    'story': `STORY + LESSON: Open with a personal micro-story (1-2 lines, past tense, specific). Build tension. Deliver the lesson cleanly. End with "Here's what I learned:" or similar.`,
+    'list': `LIST / TIPS FORMAT: Start with a bold hook (e.g. "5 things nobody tells you about X:"). Use clean numbered formatting. Each point under 15 words. End with a summary or save CTA.`,
+    'reply-bait': `REPLY BAIT: Craft a post designed to generate replies. Use open-ended questions, "Drop your X below", debate prompts like "Do you agree?", or incomplete thoughts that beg for completion.`
+  };
+
+  const system = `You are an expert Threads (Meta) content strategist. Create viral, high-engagement Threads posts. Posts are punchy, under 500 characters each, authentic-sounding, and optimised for engagement. Never use hashtags. Always return valid JSON only — no markdown backticks, no preamble.`;
+
+  const bpDetails = bpList.map(bp => blueprintInstructions[bp]).join('\n\n');
+  const user = `Create ${bpList.length} Threads post(s) about: "${topic}"${message ? `. Core angle: "${message}"` : ''}. Tone: ${selectedTone}.
+
+Blueprint instructions (one post per blueprint):
+${bpDetails}
+
+Return a JSON array with ${bpList.length} objects:
+{"type": "<hot-take|story|list|reply-bait>", "text": "<post text, max 500 chars, no hashtags>"}
+
+Return ONLY the JSON array.`;
+
+  try {
+    const raw = await callServer(system, user);
+    const clean = raw.replace(/```json|```/g, '').trim();
+    let parsed = JSON.parse(clean);
+    if (!Array.isArray(parsed)) parsed = [parsed];
+
+    const iconMap = { 'hot-take':'🔥','story':'📖','list':'📋','reply-bait':'💬' };
+    const labelMap = { 'hot-take':'Hot Take','story':'Story + Lesson','list':'List / Tips','reply-bait':'Reply Bait' };
+
+    const posts = parsed.map((p, i) => ({
+      type: p.type || bpList[i] || 'hot-take',
+      icon: iconMap[p.type] || iconMap[bpList[i]] || '✦',
+      label: labelMap[p.type] || labelMap[bpList[i]] || 'Post',
+      text: p.text || ''
+    }));
+
+    renderPosts(posts, `${posts.length} post${posts.length > 1 ? 's' : ''} · ${topic}`);
+  } catch (e) {
+    showError('orig', 'Generation failed: ' + e.message);
+  }
+
+  setLoading('orig', false);
+}
+
+async function generateReply() {
+  const source = document.getElementById('reply-source').value.trim();
+  const goal = document.getElementById('reply-goal').value;
+  const tone = document.getElementById('reply-tone').value;
+  const context = document.getElementById('reply-context').value.trim();
+
+  if (!source) { showError('reply', 'Please paste the original post to reply to.'); return; }
+
+  setLoading('reply', true);
+
+  const goalLabels = {
+    'add-value':'Add Value','agree-amplify':'Agree & Amplify',
+    'respectful-disagree':'Push Back','funny':'Funny Reply',
+    'question':'Thought-Provoking Q','story':'Related Story'
+  };
+
+  const system = `You are a master of Threads engagement. You craft replies that get massive visibility — authentic, smart, under 300 characters. Never use hashtags. Return valid JSON only.`;
+
+  const user = `Generate 3 different high-quality Threads replies to this post:
+
+ORIGINAL POST:
+"${source}"
+
+Reply goal: ${goalLabels[goal]}
+Tone: ${tone}
+${context ? `My personal context: ${context}` : ''}
+
+Return a JSON array of 3 objects:
+[{"text": "<reply text, max 300 chars>", "angle": "<one-word angle>"}]
+
+Return ONLY the JSON array.`;
+
+  try {
+    const raw = await callServer(system, user);
+    const clean = raw.replace(/```json|```/g, '').trim();
+    let parsed = JSON.parse(clean);
+    if (!Array.isArray(parsed)) parsed = [parsed];
+
+    const posts = parsed.map((p, i) => ({
+      type: 'reply-post',
+      icon: ['💬','🔁','⚡'][i] || '↩',
+      label: `Reply ${i+1} · ${p.angle || goalLabels[goal]}`,
+      text: p.text || ''
+    }));
+
+    renderPosts(posts, `${posts.length} replies · ${goalLabels[goal]}`);
+  } catch (e) {
+    showError('reply', 'Generation failed: ' + e.message);
+  }
+
+  setLoading('reply', false);
+}
+
+async function generateThread() {
+  const topic = document.getElementById('thread-topic').value.trim();
+  const count = parseInt(document.getElementById('thread-count').value);
+  const style = document.getElementById('thread-style').value;
+  const points = document.getElementById('thread-points').value.trim();
+
+  if (!topic) { showError('thread', 'Please enter a thread topic.'); return; }
+
+  setLoading('thread', true);
+  addToHistory(topic);
+
+  const styleGuide = {
+    'story-arc': 'Story arc: Post 1 = gripping hook. Middle = build tension/detail. Last = reveal/lesson/CTA.',
+    'listicle': 'Listicle: Post 1 = hook with list promise. Middle = expand each item. Last = summary + save CTA.',
+    'how-to': 'How-to: Post 1 = problem/result hook. Middle = one clear step each. Last = encouragement + result.',
+    'hot-take-debate': 'Hot take: Post 1 = bold contrarian claim. Middle = evidence + rebuttals. Last = final verdict.'
+  };
+
+  const system = `You are a viral Threads thread writer. Each post is punchy, max 500 chars, no hashtags. Make them feel like a real person wrote it. Return valid JSON only.`;
+
+  const user = `Write a ${count}-post Threads thread about: "${topic}".
+${points ? `Key points to cover: ${points}` : ''}
+
+Structure: ${styleGuide[style]}
+
+Return a JSON array of exactly ${count} objects:
+[{"text": "<post text, max 500 chars>", "position": <number>}]
+
+Post 1 must have a scroll-stopping first line. Return ONLY the JSON array.`;
+
+  try {
+    const raw = await callServer(system, user);
+    const clean = raw.replace(/```json|```/g, '').trim();
+    let parsed = JSON.parse(clean);
+    if (!Array.isArray(parsed)) parsed = [parsed];
+
+    const styleLabel = {'story-arc':'Story Arc','listicle':'Listicle','how-to':'How-To','hot-take-debate':'Hot Take'}[style];
+
+    const posts = parsed.map((p, i) => ({
+      type: i === 0 ? 'hot-take' : i === parsed.length - 1 ? 'reply-bait' : 'list',
+      icon: i === 0 ? '🧵' : i === parsed.length - 1 ? '🏁' : `${i+1}`,
+      label: i === 0 ? `Thread Start · ${styleLabel}` : i === parsed.length - 1 ? 'Thread End · CTA' : `Post ${i+1}`,
+      text: p.text || '',
+      connector: i < parsed.length - 1
+    }));
+
+    renderPosts(posts, `${posts.length}-post thread · ${topic}`);
+  } catch (e) {
+    showError('thread', 'Generation failed: ' + e.message);
+  }
+
+  setLoading('thread', false);
+}
+
+renderHistory();
+</script>
+</body>
+</html>
